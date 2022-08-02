@@ -1,0 +1,5 @@
+pandas
+nltk
+textblob
+flask
+joblib
