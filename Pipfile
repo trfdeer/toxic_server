@@ -12,8 +12,12 @@ joblib = "*"
 python-dotenv = "*"
 numpy = "*"
 scikit-learn = "*"
+requests = "*"
+flask-cors = "*"
 
 [dev-packages]
+mypy = "*"
+autopep8 = "*"
 
 [requires]
 python_version = "3.9"

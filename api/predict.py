@@ -1,12 +1,16 @@
 import re
 import string
-import joblib
-import pandas as pd
-import nltk
 from typing import *
-from nltk.corpus import stopwords
+import uuid
+
+import joblib
+import nltk
+import pandas as pd
 import textblob
+from nltk.corpus import stopwords
 from nltk.stem.snowball import SnowballStemmer
+
+from scrape import get_comments, instance
 
 
 class Predict:
@@ -65,25 +69,46 @@ class Predict:
         y_test_pred = self.classifier.predict_proba(X_test_transformed)
         return y_test_pred
 
-    def get_prediction(self, comment: str) -> str:
-        data = pd.DataFrame({"id": [0], "comment_text": comment})
-        pred = self.make_test_predictions(data)
-
-        polarity = textblob.TextBlob(comment).polarity
-
-        resp = {}
+    def make_response(self, id: str, comment: str, polarity: float, predictions: List[float]) -> Dict[str, object]:
+        resp: Dict[str, object] = {}
+        resp["id"] = id
         if polarity >= 0.1:
             resp["label"] = "positive"
         elif polarity >= -0.1:
             resp["label"] = "neutral"
         else:
             resp["label"] = "negative"
+            resp["toxic"] = any([x >= 0.5 for x in predictions])
+            resp["toxicity"] = dict(zip(self.labels, predictions))
 
         resp["polarity"] = polarity
-
-        if resp["label"] == "negative":
-            resp["info"] = dict(zip(self.labels, pred[0]))
 
         resp["text"] = comment
 
         return resp
+
+    def get_prediction(self, comment: str) -> Dict[str, object]:
+        id = str(uuid.uuid4())
+        data = pd.DataFrame(
+            {"id": [id], "comment_text": comment})
+
+        pred = self.make_test_predictions(data)
+        polarity = textblob.TextBlob(comment).polarity
+
+        return self.make_response(id, comment, polarity, pred[0])
+
+    def get_predictions(self, comments: List[str]) -> List[Dict[str, object]]:
+        data = pd.DataFrame(comments, columns=["id", "comment_text"])
+        pred = self.make_test_predictions(data)
+
+        polarities = [
+            textblob.TextBlob(comment[1])
+            .polarity for comment in comments
+        ]
+        return list(map(lambda x: self.make_response(x[0][0], x[0][1], x[1], x[2]), zip(comments, polarities, pred)))
+
+    def get_video_predictions(self, videoId: str, count: int):
+        commentList = []
+        for comments in get_comments(instance=instance, videoId=videoId, maxCount=count):
+            commentList += comments
+        return self.get_predictions(commentList)
