@@ -12,6 +12,3 @@ def get_prediction():
     if comment_text is None:
         return abort(400)
     return jsonify(pred.get_prediction(comment_text))
-
-
-app.run("localhost", 8080)

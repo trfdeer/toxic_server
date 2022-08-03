@@ -9,6 +9,9 @@ nltk = "*"
 textblob = "*"
 flask = "*"
 joblib = "*"
+python-dotenv = "*"
+numpy = "*"
+scikit-learn = "*"
 
 [dev-packages]
 
