@@ -28,3 +28,5 @@ def get_video():
     if videoId is None:
         return abort(400)
     return jsonify(pred.get_video_predictions(videoId=videoId, count=count))
+
+app.run("127.0.0.1", 8080, True)
