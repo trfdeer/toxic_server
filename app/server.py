@@ -2,8 +2,6 @@ from detoxify import Detoxify
 from flask import Flask, abort, jsonify, request
 from flask_cors import CORS
 
-from predict import Predict
-
 app = Flask(__name__)
 CORS(app)
 
