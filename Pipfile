@@ -14,10 +14,13 @@ numpy = "*"
 scikit-learn = "*"
 requests = "*"
 flask-cors = "*"
+detoxify = "*"
+deep-translator = "*"
 
 [dev-packages]
 mypy = "*"
-autopep8 = "*"
+ruff = "*"
+black = "*"
 
 [requires]
-python_version = "3.9"
+python_version = "3.10"
