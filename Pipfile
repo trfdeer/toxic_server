@@ -4,18 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pandas = "*"
-nltk = "*"
-textblob = "*"
 flask = "*"
 joblib = "*"
 python-dotenv = "*"
-numpy = "*"
-scikit-learn = "*"
-requests = "*"
 flask-cors = "*"
-detoxify = "*"
-deep-translator = "*"
+tensorflow = "*"
 
 [dev-packages]
 mypy = "*"
